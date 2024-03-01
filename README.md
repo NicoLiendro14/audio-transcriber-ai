@@ -1,45 +1,40 @@
-# Proyecto de Transcripción de Audio en Tiempo Real 👂📝
+# Video-to-Text Transcription Project 🎥➡️📝
 
-Este proyecto consiste en un sistema de transcripción de audio en tiempo real utilizando Whisper y websockets. El objetivo principal es permitir la transcripción automática de el audio de salida del sistema.
+This project aims to transcribe audio from videos into text and further summarize it using OpenAI services.
 
-## Requisitos ⚙️
+## Technologies Used 🛠️
+- NodeJS 🟩
+- Vanilla JavaScript 🍦
+- Electron: ⚡️
+- Flask 🌶️
+- Faster-Whisper 🗣️
 
-- Python 3.8 o superior.
-- Windows 10.
+## Backend Setup 💻
+1. Create a virtual environment: `python -m venv venv`
+2. Activate the virtual environment:
+   - Windows: `venv\Scripts\activate`
+   - Unix/macOS: `source venv/bin/activate`
+3. Install dependencies: `pip install -r requirements.txt`
+4. Execute `app.py`: `python app.py`
 
-## Instalación 🛠️
+## Frontend Setup 🌐
+1. Set up a new project with npm: `npm init`
+2. Install necessary packages: `npm install`
+3. Start the frontend: `npm start`
 
-1. Clona este repositorio en tu máquina local.
-2. Asegúrate de tener Python instalado en tu sistema.
-3. Crea un entorno virtual:
-```shell
-python -m venv venv 
-```
+## Usage 🚀
+1. Start the frontend using `npm start`.
+2. Select a folder containing videos.
+3. Choose a video file from the folder.
+4. Click on the "Transcribe" button.
+5. Wait for the transcription process to complete.
+6. Once transcription is finished, you can:
+   - Copy the text to the clipboard for further use.
+   - Generate a summary using OpenAI services.
 
-4. Instala las dependencias del proyecto ejecutando el siguiente comando en la terminal:
+## Contributing 🤝
+Contributions are welcome! Please fork the repository and submit a pull request.
 
-```shell
-venv/Scripts/activate && pip install -r requirements.txt
-```
+## License 📄
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-## Ejecucion directa.
-
-Para probar directamente la app se puede ejecutar el archivo **run.bat**
-
-## Configuración ⚙️
-
-Puedes personalizar la configuración del transcriptor de audio modificando los siguientes parámetros en el archivo main.py:
-
-- model_size: El tamaño del modelo Whisper a utilizar.
-- device: El dispositivo de cómputo a utilizar ("cpu" o "cuda").
-- phrase_timeout: El tiempo máximo en segundos para considerar una frase completa.
-- record_timeout: El tiempo máximo en segundos para cada grabación de audio.
-
-## Issues y cosas a mejorar 📝
-- Separar la ejecucion del script con la instalacion total. En la primera instancia que se ejecuta el script se instalan todas las dependencias y ademas se baja el modelo de Whisper a utilizar. Se debe separar la instalacion de las dependencias y el modelo de la ejecucion del script.
-- Cuando en el front tarda en mostrar las lineas de texto se saltea muchas partes de el audio que escucha. Pareciera ser que es mas comun cuando hay un cambio de voces. Probar con el siguiente ejemplo: https://www.youtube.com/watch?v=TzutZgU83Ds
-- Cuando el script escucha musica tambien tiene problemas.
-
-## Features a agregar 🛠️
-- Opcion para que siempre se mantenga por encima de todas las vetanas.
-- Historial de la transcripcion.
