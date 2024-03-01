@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Transcription Service</title>
+    <script type="module" src="js/transcribeVideo.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+
+        body {
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        textarea {
+            width: 100%;
+            height: 500px;
+            resize: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            overflow-y: auto;
+
+        }
+
+        textarea::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 6px;
+        }
+
+        textarea::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container>div {
+            width: 100%;
+        }
+
+        .container>div:first-child {
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mx-auto px-4 py-8 min-h-screen flex flex-col justify-center items-center">
+        <!-- Header -->
+        <div class="flex justify-center">
+            <header class="flex items-center py-4">
+                <h1 class="text-3xl font-bold text-white">TranscribeIt!</h1>
+            </header>
+        </div>
+
+        <!-- Folder Selection -->
+        <div id="folder-section" class="text-center my-8" style="display: none;">
+            <h2 id="text-current-folder" class="text-2xl font-semibold text-white mb-4 py-4 px-4 inline-block">Current Folder: Videos</h2>
+            <label class="text-2xl font-semibold mb-4 inline-block bg-yellow-400 hover:bg-yellow-500 transition duration-300 text-white px-4 py-2 rounded cursor-pointer">
+                <span>Change Folder</span>
+                <input type="file" webkitdirectory directory multiple style="display: none;" id="folderInput1">
+            </label>
+        </div>
+
+        
+
+        <main id="before-select-folder" class="text-center flex flex-col items-center justify-center flex-grow">
+            <h2 class="text-2xl font-semibold text-white mb-4">No Videos Loaded</h2>
+            <p class="text-white mb-6">Select a folder to load your videos and start transcribing.</p>
+            <label
+                class="bg-white text-gray-800 px-6 py-3 rounded hover:bg-gray-100 transition duration-300 cursor-pointer">
+                <span class="text-lg">Select Folder</span>
+                <input type="file" webkitdirectory directory multiple style="display: none;" id="folderInput2">
+            </label>
+            <div class="mt-12">
+                <i class="fas fa-video fa-6x text-white opacity-50"></i>
+            </div>
+        </main>
+
+        <!-- Main Content -->
+        <main class="flex flex-col items-center">
+            <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="videoList">
+
+            </div>
+            <!-- Video List will be dynamically generated here -->
+        </main>
+
+        <div id="container-text" class="container mx-auto px-4 py-8" style="display: none;">
+            <!-- Main Content -->
+            <main class="flex flex-col items-center">
+                <!-- Modal -->
+                <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="transcriptModal">
+                    <div class="relative top-20 mx-auto p-5 border max-w-xl mx-auto shadow-lg rounded-md bg-white">
+                        <!-- Cambiar la clase 'w-96' a 'max-w-xl' para hacer el modal más ancho -->
+                        <div class="mt-3 text-center">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Transcript</h3>
+                            <div class="bg-gray-100 rounded-lg p-4 mt-2">
+                                <textarea id="text-inside" class="text-sm text-gray-500">
+                                    <!-- Contenido del texto -->
+                                </textarea>
+                            </div>
+                            <div class="items-start px-4 py-3">
+                                <!-- Cambiar la clase a 'items-start' para alinear los botones a la izquierda -->
+                                <button id="copyButton"
+                                    class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    Copy to Clipboard
+                                </button>
+                                <button id="summarizeButton"
+                                    class="mt-3 px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    Summarize with AI
+                                </button>
+                            </div>
+                            <!-- Close button -->
+                            <div class="absolute top-0 right-0 pt-4 pr-4">
+                                <button type="button" class="text-gray-400 hover:text-gray-500"
+                                    onclick="document.getElementById('container-text').style.display='none'">
+                                    <span class="text-2xl">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+
+    </div>
+</body>
+
+
+<script type="module" src="js/getFiles.js"></script>
+<script type="module" src="js/copyText.js"></script>
+<script type="module" src="js/summarize.js"></script>
+<script>    
+    function transcribeVideo(filePath, event) {
+    event.target.disabled = true;
+    const buttonTranscribe = event.target.parentNode
+    buttonTranscribe.style.display = 'none';
+    
+    const spinner = event.target.parentNode.parentNode.querySelector('#spinner-loading');
+    spinner.style = '';
+    const requestData = {
+        path: filePath
+    };
+
+    fetch('http://127.0.0.1:5000/transcribe', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const transcriptModal = document.getElementById('transcriptModal');
+            const transcriptText = data.text;
+
+            const transcriptContent = transcriptModal.querySelector('#text-inside');
+            transcriptContent.textContent = transcriptText;
+
+            const containerText = document.getElementById('container-text');
+            containerText.style.display = 'block';
+            containerText.classList.add('fadeIn');
+
+            setTimeout(() => {
+                containerText.classList.remove('fadeIn');
+            }, 500);
+
+            event.target.disabled = false;
+            spinner.style.display = 'none';
+            buttonTranscribe.style = '';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            event.target.disabled = false;
+            spinner.style.display = 'none';
+            buttonTranscribe.style = '';
+        });
+}
+
+</script>
+</html>
